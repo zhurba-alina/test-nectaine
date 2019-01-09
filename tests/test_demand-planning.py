@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from pyvirtualdisplay import Display
 from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,15 +13,18 @@ class TestLogin():
 
     def test_setup(self):
         global driver
+        display = Display(visible=0, size=(1024, 768))
+        display.start()
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.implicitly_wait(10)
         driver.maximize_window()
         driver.get("https://app.stage.nectain.com")
         print(" >> Tests Suit Start << ")
         yield
-        # driver.close()
-        # driver.quit()
         print(" \n >> Tests Suit Complete << ")
+        driver.close()
+        driver.quit()
+        display.stop()
 
     def test_login(self, test_setup):
         # driver.get("http://corporate-nectain.eastus.cloudapp.azure.com")
@@ -64,8 +68,8 @@ class TestLogin():
         wait.until(EC.visibility_of_element_located(
             (By.XPATH,
              '//div[@class="el-upload-dragger"]')))
-        path_to_file = 'C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx'
-        # FOR LINUX or WIN SHOULD CHANGE THE PATH
+        path_to_file = '/home/alina/PycharmProjects/test-nectaine/tests/test-bdg.xlsx'
+        # === >> FOR LINUX or WIN SHOULD CHANGE THE PATH
         # C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
         # /home/alina/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
         driver.find_element_by_xpath('//input[@class="el-upload__input"]').send_keys(path_to_file)
