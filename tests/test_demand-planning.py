@@ -65,7 +65,7 @@ class TestLogin():
             (By.XPATH,
              '//div[@class="el-upload-dragger"]')))
         path_to_file = 'C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx'
-        # FOR LINUX or WIN SHOULD CHANGE THE PATH
+        # === FOR LINUX or WIN SHOULD CHANGE THE PATH ===
         # C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
         # /home/alina/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
         driver.find_element_by_xpath('//input[@class="el-upload__input"]').send_keys(path_to_file)
@@ -74,9 +74,6 @@ class TestLogin():
              '//span[@class="el-dialog__title" and contains(text(), "Select a sheet")]')))
         driver.find_element_by_xpath('//*[@class="el-radio__inner"]').click()
         driver.find_element_by_xpath('//*[@class="el-dialog__body"]//*[@type="button"]').click()
-
-
-
         wait.until(EC.visibility_of_element_located(
             (By.XPATH,
              '//button[@class="excel-import__finish-btn el-tooltip"]')))
