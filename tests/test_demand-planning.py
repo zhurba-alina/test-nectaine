@@ -7,23 +7,28 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import TimeoutException
 
-class TestLogin():
-    @pytest.fixture()
+class TestLogin:
 
-    def test_setup(self):
+    @classmethod
+    def setup_class(cls):
         global driver
         driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.implicitly_wait(10)
         driver.maximize_window()
         driver.get("https://app.stage.nectain.com")
         print(" >> Tests Suit Start << ")
-        yield
+        # yield
         # driver.close()
         # driver.quit()
         print(" \n >> Tests Suit Complete << ")
+        return driver
 
-    def test_login(self, test_setup):
-        # driver.get("http://corporate-nectain.eastus.cloudapp.azure.com")
+    @classmethod
+    def teardown_class(cls):
+        driver.close()
+        driver.quit()
+
+    def test_login(self):
         assert "Nectain" in driver.title
         assert "Nectain" in driver.find_element_by_class_name('login_title').text
         assert "Nectain" in driver.find_element_by_css_selector('.login_title').text
@@ -35,10 +40,14 @@ class TestLogin():
         wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'nc-sidebar__logo__logo-normal')))
         print(" >> Test Login << ")
 
+    def test_demand_open(self):
         # >> DEMAND PLANING <<
+        wait = WebDriverWait(driver, 10)
+        driver.implicitly_wait(10)
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'nc-sidebar__logo__triangle')))
         driver.find_element_by_class_name('nc-sidebar__logo__triangle').click()
-        button_nectaine = driver.find_element_by_xpath('//div[contains(text(), "Nectain") and @class="nc-sidebar__desktops__item"]')
+        button_nectaine = driver.find_element_by_xpath(
+            '//div[contains(text(), "Nectain") and @class="nc-sidebar__desktops__item"]')
         wait.until(EC.visibility_of_element_located(
             (By.XPATH, '//div[contains(text(), "Nectain") and @class="nc-sidebar__desktops__item"]')))
         assert "Nectain" in button_nectaine.text
@@ -46,7 +55,8 @@ class TestLogin():
         button_eplaning = driver.find_element_by_xpath(
             '//div[@class="el-submenu__title"]/following::div//span[contains(text(), "E-Planning") and @class="el-submenu__name"]')
         wait.until(EC.visibility_of_element_located(
-            (By.XPATH, '//div[@class="el-submenu__title"]/following::div//span[contains(text(), "E-Planning") and @class="el-submenu__name"]')))
+            (By.XPATH,
+             '//div[@class="el-submenu__title"]/following::div//span[contains(text(), "E-Planning") and @class="el-submenu__name"]')))
         button_eplaning.click()
         button_demand = driver.find_element_by_xpath(
             '//li[@class="el-submenu is-opened selected-item"]/ul[@role="menu"]/span/li[contains(text(), "Demand Planning") and @class="el-menu-item"]')
@@ -64,7 +74,7 @@ class TestLogin():
         wait.until(EC.visibility_of_element_located(
             (By.XPATH,
              '//div[@class="el-upload-dragger"]')))
-        path_to_file = 'C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx'
+        path_to_file = '/home/alina/PycharmProjects/test-nectaine/tests/test-bdg.xlsx'
         # === FOR LINUX or WIN SHOULD CHANGE THE PATH ===
         # C:/Users/zhurba/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
         # /home/alina/PycharmProjects/test-nectaine/tests/test-bdg.xlsx
@@ -102,9 +112,8 @@ class TestLogin():
             (By.XPATH,
              '//div[contains(text(), "Demand Items") and @class="nc__tab__title"]')))
 
-
-
         print(" >> Test Demand Upload << ")
         driver.implicitly_wait(10)
         print(" >> Test Demand Complete<< ")
 
+    
